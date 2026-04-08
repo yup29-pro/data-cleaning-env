@@ -1,0 +1,22 @@
+# requirements.txt
+# ─────────────────────────────────────────────
+# Python dependencies for data-cleaning-env
+# ─────────────────────────────────────────────
+
+# Core
+fastapi>=0.115.2
+uvicorn>=0.30.6
+gradio>=6.0.0
+pydantic>=2.11.10
+
+# Data
+pandas==2.2.3
+numpy==1.26.4
+
+# LLM
+openai>=1.0.0
+
+# Utils
+pyyaml>=6.0.2
+python-multipart>=0.0.18
+huggingface-hub>=0.33.5

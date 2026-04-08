@@ -1,0 +1,129 @@
+# openenv.yaml
+# ─────────────────────────────────────────────
+# OpenEnv metadata specification
+# ─────────────────────────────────────────────
+
+name: data-cleaning-env
+version: 1.0.0
+description: >
+  An OpenEnv environment where an AI agent cleans messy CSV datasets.
+  The agent receives a dataset with issues like missing values, duplicates,
+  outliers, bad column names, and inconsistent values, and must fix them
+  step by step using structured actions.
+
+author: Yashwanth34567
+repository: https://huggingface.co/spaces/Yashwanth34567/data-cleaning-env
+tags:
+  - openenv
+  - data-cleaning
+  - csv
+  - real-world
+  - tabular
+
+# ── Action Space ──────────────────────────────
+actions:
+  - name: fill_missing
+    description: Fill null values in a column
+    parameters:
+      column: string
+      strategy: "mean | median | mode | drop"
+
+  - name: drop_duplicates
+    description: Remove duplicate rows
+    parameters: {}
+
+  - name: fix_dtype
+    description: Convert column to target dtype
+    parameters:
+      column: string
+      target_type: "int | float | str | datetime"
+
+  - name: rename_column
+    description: Rename a column to clean snake_case
+    parameters:
+      old_name: string
+      new_name: string
+
+  - name: remove_outliers
+    description: Remove outlier rows from a numeric column
+    parameters:
+      column: string
+      method: "iqr | zscore"
+
+  - name: standardize_values
+    description: Replace inconsistent values using a mapping
+    parameters:
+      column: string
+      mapping: object
+
+  - name: submit
+    description: Finalize episode and trigger grader
+    parameters: {}
+
+# ── Observation Space ─────────────────────────
+observation:
+  task_id: string
+  difficulty: "easy | medium | hard"
+  step: integer
+  max_steps: integer
+  dataframe: array
+  columns: array
+  dtypes: object
+  null_counts: object
+  duplicate_rows: integer
+  issues: array
+  done: boolean
+
+# ── Reward ────────────────────────────────────
+reward:
+  type: float
+  range: [-1.0, 1.0]
+  description: >
+    Partial progress rewards at each step.
+    +0.10 per issue fixed, +0.30 bonus on clean submit,
+    -0.05 for wrong/redundant actions,
+    -0.10 for destructive actions.
+
+# ── Tasks ─────────────────────────────────────
+tasks:
+  - id: task_1_easy
+    difficulty: easy
+    description: >
+      Fix a 10-row employee dataset.
+      Fill missing values in age and salary columns.
+      Convert age from string to integer dtype.
+    score_range: [0.0, 1.0]
+
+  - id: task_2_medium
+    difficulty: medium
+    description: >
+      Fix a 20-row dataset.
+      Remove duplicate rows.
+      Handle salary outliers using IQR method.
+      Standardize country values to United States or UK.
+    score_range: [0.0, 1.0]
+
+  - id: task_3_hard
+    difficulty: hard
+    description: >
+      Fix a 30-row dataset with all issues combined.
+      Fix bad column names with trailing spaces, uppercase, special chars.
+      Fill missing values, remove duplicates and outliers.
+      Standardize country values.
+      Fix invalid dept_id values for referential integrity.
+    score_range: [0.0, 1.0]
+
+# ── Environment Settings ──────────────────────
+settings:
+  max_steps: 20
+  render_mode: gradio
+  server_host: 0.0.0.0
+  server_port: 7860
+
+# ── API Endpoints ─────────────────────────────
+endpoints:
+  reset: POST /reset
+  step:  POST /step
+  state: GET  /state
+  tasks: GET  /tasks
+  spec:  GET  /openenv.yaml
