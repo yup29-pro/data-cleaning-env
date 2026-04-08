@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel", "uv>=0.1.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "data-cleaning-env"
+version = "0.1.0"
+description = "An OpenEnv-compliant environment where an AI agent cleans messy CSV datasets step by step."
+authors = [
+    { name = "Yashwanth", email = "yup29-pro@gmail.com" }
+]
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10,<3.13"
+
+dependencies = [
+    # Core
+    "fastapi>=0.115.2",
+    "uvicorn>=0.30.6",
+    "gradio>=6.0.0",
+    "pydantic>=2.11.10",
+
+    # Data
+    "pandas==2.2.3",
+    "numpy==1.26.4",
+
+    # LLM
+    "openai>=1.0.0",
+
+    # Utils
+    "pyyaml>=6.0.2",
+    "python-multipart>=0.0.18",
+    "huggingface-hub>=0.33.5",
+
+    # OpenEnv requirement
+    "openenv-core>=0.2.0"
+]
+
+[project.scripts]
+# Entry point for the server
+server = "server.app:app"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["*"]
+
+[tool.openenv]
+# Files that define environment logic
+entrypoints = [
+    "inference.py",
+    "environment.py",
+    "tasks.py"
+]
+multi_mode = true
