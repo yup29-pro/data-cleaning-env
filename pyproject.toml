@@ -38,7 +38,7 @@ dependencies = [
 
 [project.scripts]
 # Entry point for the server
-server = "server.app:app"
+server = "server.app:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
