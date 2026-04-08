@@ -1,14 +1,15 @@
 from fastapi import FastAPI
+import uvicorn
 
-# Create the FastAPI app
 app = FastAPI()
 
-# Root endpoint
 @app.get("/")
 def read_root():
-    return {"message": "Server is running!"}
+    return {"message": "Hello, Hugging Face!"}
 
-# Example endpoint for health check
-@app.get("/health")
-def health_check():
-    return {"status": "ok"}
+def main():
+    # Start the server
+    uvicorn.run("server.app:app", host="0.0.0.0", port=7860, reload=False)
+
+if __name__ == "__main__":
+    main()
